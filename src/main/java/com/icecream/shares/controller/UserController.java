@@ -26,6 +26,7 @@ public class UserController {
     @GetMapping("/getUserInfo")
     public ResponseJson<UserInfo> getUserInfo(){
         int userId = Integer.parseInt(LoginInterceptor.getUserId());
+
         UserInfo userInfo = userServiceImpl.getUserInfo(userId);
         if (userInfo == null){
             return new ResponseJson<>(ResultCode.UNVALIDPARAMS);
@@ -33,9 +34,9 @@ public class UserController {
             return new ResponseJson<>(ResultCode.SUCCESS, userInfo);
         }
     }
-    @Auth
-    @PostMapping("/updateInfo")
-    public ResponseJson<Object> updateInfo(@RequestBody )
+//    @Auth
+//    @PostMapping("/updateInfo")
+//    public ResponseJson<Object> updateInfo(@RequestBody )
     @Auth
     @PostMapping("/addConcern")
     public  ResponseJson<Object> addConcern(@RequestBody Map<String, String> map){
@@ -47,5 +48,8 @@ public class UserController {
         }else {
             return new ResponseJson<>(ResultCode.UNVALIDPARAMS);
         }
+
+        return new ResponseJson<>(ResultCode.UNVALIDPARAMS);
+
     }
 }
