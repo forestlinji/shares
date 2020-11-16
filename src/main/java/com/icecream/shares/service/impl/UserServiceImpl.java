@@ -21,14 +21,6 @@ public class UserServiceImpl implements UserService {
     public UserMapper userMapper;
     @Autowired
     public PreferService preferService;
-    @Autowired
-    UserInfoMapper userInfoMapper;
-    @Override
-    public UserInfo getUserInfo(Integer userId) {
-        QueryWrapper<UserInfo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_id", userId);
-        return userInfoMapper.selectOne(queryWrapper);
-    }
 
 
     @Override
