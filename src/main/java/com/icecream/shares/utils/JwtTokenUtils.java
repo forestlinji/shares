@@ -1,7 +1,8 @@
 package com.icecream.shares.utils;
 
 
-import com.winterice.vote.constants.SecurityConstants;
+
+import com.icecream.shares.constants.SecurityConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
