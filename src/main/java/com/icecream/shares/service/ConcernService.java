@@ -1,5 +1,6 @@
 package com.icecream.shares.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.icecream.shares.pojo.Concern;
 
