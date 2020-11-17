@@ -29,4 +29,12 @@ public class ConcernServiceImpl extends ServiceImpl<ConcernMapper, Concern> impl
         }
         return 0;
     }
+    @Override
+    public QueryWrapper<Concern> cancelConcern(Integer concernUserId, Integer concernedUserId) {
+        QueryWrapper<Concern> queryWrapper = new QueryWrapper<>();
+
+        queryWrapper.eq("concern_user_id",concernUserId).eq("concerned_user_id",concernedUserId);
+
+        return queryWrapper;
+    }
 }
