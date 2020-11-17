@@ -9,4 +9,5 @@ import com.icecream.shares.pojo.Concern;
  */
 public interface ConcernService extends IService<Concern> {
     int addConcern(Concern concern);
+    QueryWrapper<Concern> cancelConcern(Integer concernUserId, Integer concernedUserId);
 }
