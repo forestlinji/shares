@@ -41,6 +41,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
     @Override
     public boolean update(UserInfoVo userInfoVo) {
         UpdateWrapper<User> userUpdateWrapper = new UpdateWrapper<>();
+
         userUpdateWrapper.eq("user_id", userInfoVo.getUserId()).set("username", userInfoVo.getUsername());
         UpdateWrapper<UserInfo> userInfoUpdateWrapper = new UpdateWrapper<>();
         userInfoUpdateWrapper.eq("user_id",userInfoVo.getUserId()).set("username", userInfoVo.getUsername())

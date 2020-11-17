@@ -3,15 +3,16 @@ package com.icecream.shares.controller;
 import cn.hutool.core.util.PhoneUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.aliyun.oss.ClientException;
+import com.icecream.shares.annotation.Auth;
+import com.icecream.shares.interceptor.LoginInterceptor;
 import com.icecream.shares.pojo.*;
 import com.icecream.shares.service.MessageService;
 import com.icecream.shares.service.UserService;
 import com.icecream.shares.utils.JwtTokenUtils;
 import com.icecream.shares.utils.MD5Utils;
-import com.icecream.shares.vo.LoginPhoneVo;
-import com.icecream.shares.vo.LoginUsernameVo;
-import com.icecream.shares.vo.WechatLogin;
+import com.icecream.shares.vo.*;
 import org.apache.commons.lang.math.RandomUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.ResponseEntity;
@@ -152,4 +153,68 @@ public class AuthController {
         messageService.sendCode(phone, code);
         return new ResponseJson(ResultCode.SUCCESS);
     }
+
+    @GetMapping("authInfo")
+    @Auth
+    public ResponseJson<AuthInfoVo> getAuthInfo(){
+        int userId = Integer.parseInt(LoginInterceptor.getUserId());
+        User userByUserId = userService.findUserByUserId(userId);
+        AuthInfoVo authInfoVo = new AuthInfoVo();
+        BeanUtils.copyProperties(userByUserId, authInfoVo);
+        authInfoVo.setRoles(userService.getRolesByUserId(userId));
+        return new ResponseJson<>(ResultCode.SUCCESS, authInfoVo);
+    }
+
+    @PostMapping("changePassword")
+    @Auth
+    public ResponseJson changePassword(@RequestBody @Valid ChangePasswordVo changePasswordVo){
+        int userId = Integer.parseInt(LoginInterceptor.getUserId());
+        User user = userService.findUserByUserId(userId);
+        boolean success = userService.changePassword(user, changePasswordVo);
+        if(!success){
+            return new ResponseJson(ResultCode.UNVALIDPARAMS);
+        }else{
+            return new ResponseJson(ResultCode.SUCCESS);
+        }
+    }
+
+    @PostMapping("bind/wechat")
+    @Auth
+    public ResponseJson bindWechat(@RequestBody Map map){
+        String code = (String) map.get("code");
+        int userId = Integer.parseInt(LoginInterceptor.getUserId());
+        RestTemplate restTemplate = new RestTemplate();
+
+        ResponseEntity<WechatLogin> wechatResponse = restTemplate.getForEntity("https://api.weixin.qq.com/sns/jscode2session?appid=APPID&secret=SECRET&js_code=" + code + "&grant_type=authorization_code",
+                WechatLogin.class);
+        WechatLogin wechatLogin = wechatResponse.getBody();
+        if(!wechatLogin.getErrcode().equals(0)){
+            return new ResponseJson(ResultCode.UNVALIDPARAMS);
+        }
+        String openid = wechatLogin.getOpenid();
+        User user = new User();
+        user.setUserId(userId);
+        user.setOpenId(openid);
+        userService.updateUser(user);
+        return new ResponseJson(ResultCode.SUCCESS);
+    }
+
+    @PostMapping("/bind/phone")
+    @Auth
+    public ResponseJson bindPhone(@Valid @RequestBody LoginPhoneVo loginPhoneVo){
+        int userId = Integer.parseInt(LoginInterceptor.getUserId());
+        String phone = loginPhoneVo.getPhone();
+        String code = loginPhoneVo.getCode();
+        String correct = redisTemplate.opsForValue().get("code:"+phone);
+        if(!Objects.equals(code, correct)){
+            return new ResponseJson(ResultCode.WRONGCODE);
+        }
+        redisTemplate.delete("code:"+phone);
+        User user = userService.findUserByUserId(userId);
+        user.setPhone(phone);
+        userService.updateUser(user);
+        return new ResponseJson(ResultCode.SUCCESS);
+    }
+
+
 }

@@ -13,9 +13,12 @@ import com.icecream.shares.pojo.User;
 import com.icecream.shares.service.PreferService;
 
 import com.icecream.shares.service.UserService;
+import com.icecream.shares.utils.MD5Utils;
+import com.icecream.shares.vo.ChangePasswordVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Service
@@ -35,6 +38,36 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         QueryWrapper<UserInfo> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id", userId);
         return userInfoMapper.selectOne(queryWrapper);
+    }
+
+    @Override
+    public User findUserByUserId(int userId) {
+        return userMapper.selectById(userId);
+    }
+
+    @Override
+    public boolean changePassword(User user, ChangePasswordVo changePasswordVo) {
+        String newPassword = changePasswordVo.getNewPassword();
+        String oldPassword = changePasswordVo.getOldPassword();
+        Integer userId = user.getUserId();
+        String passwordVo = MD5Utils.cptry(userId.toString() + oldPassword + userId.toString());
+        if(user.getPassword() == null){
+            user.setPassword(MD5Utils.cptry(userId.toString() + newPassword + userId.toString()));
+            user.setLastChangetime(new Timestamp(System.currentTimeMillis()));
+        }else if(!user.getPassword().equals(passwordVo)){
+            return false;
+        }else{
+            user.setPassword(MD5Utils.cptry(userId.toString() + newPassword + userId.toString()));
+            user.setLastChangetime(new Timestamp(System.currentTimeMillis()));
+        }
+        userMapper.updateById(user);
+
+        return true;
+    }
+
+    @Override
+    public void updateUser(User user) {
+        userMapper.updateById(user);
     }
 
 

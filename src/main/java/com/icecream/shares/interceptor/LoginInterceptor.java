@@ -26,9 +26,6 @@ public class LoginInterceptor implements HandlerInterceptor {
         if(HttpMethod.OPTIONS.matches(method)){
             return true;
         }
-//        if(handler instanceof ResourceHttpRequestHandler){
-//            return true;
-//        }
         //检查注解
         HandlerMethod hand = (HandlerMethod) handler;
         Auth auth = AnnotationUtils.findAnnotation(((HandlerMethod) handler).getMethod(), Auth.class);

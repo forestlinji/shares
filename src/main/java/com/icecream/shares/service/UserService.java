@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.icecream.shares.pojo.UserInfo;
 import com.icecream.shares.pojo.User;
 
+import com.icecream.shares.vo.ChangePasswordVo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,4 +47,26 @@ public interface UserService extends IService<User> {
      * @return
      */
     public UserInfo getUserInfo(Integer userId);
+
+    /**
+     * 根据用户id获取权限信息
+     * @param userId
+     */
+    User findUserByUserId(int userId);
+
+    /**
+     * 修改密码
+     * @param user
+     * @param changePasswordVo
+     * @return
+     */
+    boolean changePassword(User user, ChangePasswordVo changePasswordVo);
+
+    /**
+     * 更新user表
+     * @param user
+     */
+    void updateUser(User user);
+
+
 }

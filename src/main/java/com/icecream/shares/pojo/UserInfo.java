@@ -19,7 +19,7 @@ public class UserInfo {
     @TableId
     private Integer userId;
     private String username;
-    private boolean sex;
+    private Boolean sex;
     private Date birth;
     private String userSign;
     private String headLink;

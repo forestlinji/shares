@@ -12,11 +12,11 @@ public enum ResultCode {
     ERRORMETHOD(501,"接口调用方式错误"),
     UNVALIDPARAMS(201,"参数不合法"),
     WRONGINFO(202,"激活码错误"),
-    UNLOGIN(203,"未登录"),
     EXISTS(204,"已经位于收藏中"),
     WRONGCODE(202,"验证码错误或过期"),
     REGISTER(210,"成功登录，但该用户为第一次登录"),
     TOOOFTEN(203,"频繁请求"),
+    UNLOGIN(403,"未登录或权限不足"),
 
     //    WRONGJWT(204,"token错误或已过期"),
 //    BANADMIN(205,"不能封禁管理员"),

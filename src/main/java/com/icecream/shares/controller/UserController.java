@@ -77,9 +77,7 @@ public class UserController {
 //        return new ResponseJson<>(ResultCode.UNVALIDPARAMS);
 
     }
-    @Auth
-    @DeleteMapping("/cancelConcern")
-    public
+
 
     @GetMapping("/getHeadLink")
     public ResponseJson<Map<String,String>> getHeadLink(Integer userId){
@@ -92,4 +90,5 @@ public class UserController {
             return new ResponseJson<>(ResultCode.UNVALIDPARAMS);
         }
     }
+
 }
