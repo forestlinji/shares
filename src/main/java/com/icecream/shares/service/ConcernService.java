@@ -8,4 +8,5 @@ import com.icecream.shares.pojo.Concern;
  * @create 2020/11/16 20:45
  */
 public interface ConcernService extends IService<Concern> {
+    int addConcern(Concern concern);
 }

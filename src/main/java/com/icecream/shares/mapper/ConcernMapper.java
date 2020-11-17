@@ -3,6 +3,7 @@ package com.icecream.shares.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.fasterxml.jackson.databind.ser.Serializers;
 import com.icecream.shares.pojo.Concern;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -13,4 +14,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 @Mapper
 public interface ConcernMapper extends BaseMapper<Concern> {
+    @Insert("insert IGNORE into concern values(#{concernUserId}, #{concernedUserId})")
+    int insertOrIgnore(Concern concern);
 }

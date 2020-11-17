@@ -63,16 +63,24 @@ public class UserController {
     public  ResponseJson<Object> addConcern(@RequestBody Map<String, String> map){
         int userId = Integer.parseInt(LoginInterceptor.getUserId());
         int concernedUserId = Integer.parseInt(map.get("userId"));
+        User user = userServiceImpl.getById(concernedUserId);
+        if(null == user || userId == concernedUserId){
+            return new ResponseJson<>(ResultCode.UNVALIDPARAMS);
+        }
         Concern concern = new Concern(userId, concernedUserId);
-        if(concernServiceImpl.save(concern)){
+        if(concernServiceImpl.addConcern(concern) == 1){
             return new ResponseJson<>(ResultCode.SUCCESS);
         }else {
-            return new ResponseJson<>(ResultCode.UNVALIDPARAMS);
+            return new ResponseJson<>(ResultCode.UNVALIDPARAMS, "重复关注");
         }
 
 //        return new ResponseJson<>(ResultCode.UNVALIDPARAMS);
 
     }
+    @Auth
+    @DeleteMapping("/cancelConcern")
+    public
+
     @GetMapping("/getHeadLink")
     public ResponseJson<Map<String,String>> getHeadLink(Integer userId){
         UserInfo userInfo = userInfoServiceImpl.getById(userId);

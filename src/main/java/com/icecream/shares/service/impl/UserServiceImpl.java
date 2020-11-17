@@ -2,6 +2,7 @@ package com.icecream.shares.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.icecream.shares.mapper.RoleMapper;
 import com.icecream.shares.mapper.UserInfoMapper;
 import com.icecream.shares.pojo.UserInfo;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     @Autowired
     public UserMapper userMapper;

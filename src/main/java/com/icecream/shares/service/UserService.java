@@ -1,6 +1,7 @@
 package com.icecream.shares.service;
 
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.icecream.shares.pojo.UserInfo;
 import com.icecream.shares.pojo.User;
 
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 
-public interface UserService {
+public interface UserService extends IService<User> {
 
 
     //根据手机号查询用户

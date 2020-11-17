@@ -1,5 +1,6 @@
 package com.icecream.shares.pojo;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Concern {
+    @TableId
     private Integer concernUserId;
+    @TableId
     private Integer concernedUserId;
 }
