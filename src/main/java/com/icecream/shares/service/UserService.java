@@ -38,4 +38,11 @@ public interface UserService {
      * @return
      */
     User findUserByUsername(String username);
+
+    /**
+     * 根据用户id获取信息
+     * @param userId
+     * @return
+     */
+    public UserInfo getUserInfo(Integer userId);
 }
