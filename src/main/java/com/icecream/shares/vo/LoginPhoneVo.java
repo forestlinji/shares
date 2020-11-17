@@ -1,4 +1,4 @@
-package com.icecream.shares.pojo;
+package com.icecream.shares.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

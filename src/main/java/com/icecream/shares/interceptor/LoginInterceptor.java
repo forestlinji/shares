@@ -10,6 +10,7 @@ import org.springframework.http.HttpMethod;
 
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,6 +26,9 @@ public class LoginInterceptor implements HandlerInterceptor {
         if(HttpMethod.OPTIONS.matches(method)){
             return true;
         }
+//        if(handler instanceof ResourceHttpRequestHandler){
+//            return true;
+//        }
         //检查注解
         HandlerMethod hand = (HandlerMethod) handler;
         Auth auth = AnnotationUtils.findAnnotation(((HandlerMethod) handler).getMethod(), Auth.class);
