@@ -2,7 +2,6 @@ package com.icecream.shares.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
-import com.icecream.shares.mapper.RoleMapper;
 import com.icecream.shares.mapper.UserInfoMapper;
 import com.icecream.shares.pojo.UserInfo;
 

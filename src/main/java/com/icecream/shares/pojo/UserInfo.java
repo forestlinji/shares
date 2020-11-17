@@ -1,6 +1,7 @@
 package com.icecream.shares.pojo;
 
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.icecream.shares.vo.UserInfoVo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,4 +25,10 @@ public class UserInfo {
     private String headLink;
     private Integer shareNum;
     private Integer fanNum;
+//    public void update(UserInfoVo userInfoVo){
+//        this.username = userInfoVo.getUsername();
+//        this.birth = userInfoVo.getBirth();
+//        this.sex = userInfoVo.isSex();
+//        this.userSign = userInfoVo.getUserSign();
+//    }
 }
