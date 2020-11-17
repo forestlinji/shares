@@ -34,7 +34,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         userUpdateWrapper.eq("user_id", userInfoVo.getUserId()).set("username", userInfoVo.getUsername());
         UpdateWrapper<UserInfo> userInfoUpdateWrapper = new UpdateWrapper<>();
         userInfoUpdateWrapper.eq("user_id",userInfoVo.getUserId()).set("username", userInfoVo.getUsername())
-                .set("sex", userInfoVo.isSex()).set("birth",userInfoVo.getBirth()).set("userSign",userInfoVo.getUserSign());
+                .set("sex", userInfoVo.isSex()).set("birth",userInfoVo.getBirth()).set("user_sign",userInfoVo.getUserSign());
         return userMapper.update(null, userUpdateWrapper) == 1 && baseMapper.update(null, userInfoUpdateWrapper) == 1;
     }
 }

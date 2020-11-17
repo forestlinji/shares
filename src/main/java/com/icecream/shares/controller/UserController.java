@@ -11,6 +11,7 @@ import com.icecream.shares.vo.UserInfoVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @CrossOrigin
@@ -49,6 +50,7 @@ public class UserController {
     @PostMapping("/updateInfo")
     public ResponseJson<Object> updateInfo(@RequestBody UserInfoVo userInfoVo){
         Integer userId = Integer.parseInt(LoginInterceptor.getUserId());
+        System.out.println(userInfoVo);
         userInfoVo.setUserId(userId);
         if(userInfoServiceImpl.update(userInfoVo)){
             return new ResponseJson<>(ResultCode.SUCCESS);
@@ -70,5 +72,16 @@ public class UserController {
 
 //        return new ResponseJson<>(ResultCode.UNVALIDPARAMS);
 
+    }
+    @GetMapping("/getHeadLink")
+    public ResponseJson<Map<String,String>> getHeadLink(Integer userId){
+        UserInfo userInfo = userInfoServiceImpl.getById(userId);
+        if(null != userInfo){
+            Map<String, String> map =new HashMap<>();
+            map.put("headLink", userInfo.getHeadLink());
+            return new ResponseJson<>(ResultCode.SUCCESS, map);
+        }else {
+            return new ResponseJson<>(ResultCode.UNVALIDPARAMS);
+        }
     }
 }
