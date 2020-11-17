@@ -77,7 +77,31 @@ public class UserController {
 //        return new ResponseJson<>(ResultCode.UNVALIDPARAMS);
 
     }
+    @Auth
+    @DeleteMapping("/cancelConcern")
+    public  ResponseJson<Object> cancerConcern(@RequestBody Map<String, String> map) {
+        Integer userId = Integer.parseInt(LoginInterceptor.getUserId());//自己的id
+        Integer cancelConcernedUserId = Integer.parseInt(map.get("userId"));//对方的id
 
+
+        if (concernServiceImpl.remove(concernServiceImpl.cancelConcern(userId, cancelConcernedUserId))) {
+            return new ResponseJson<>(ResultCode.SUCCESS);
+        } else {
+            return new ResponseJson<>(ResultCode.UNVALIDPARAMS);
+
+        }
+    }
+    @Auth
+    @GetMapping("/otherInfo")
+    public ResponseJson<UserInfo> otherInfo(Integer userId){
+
+        UserInfo userInfo = userInfoServiceImpl.getById(userId);
+        if (userInfo == null){
+            return new ResponseJson<>(ResultCode.UNVALIDPARAMS);
+        }else {
+            return new ResponseJson<>(ResultCode.SUCCESS, userInfo);
+        }
+    }
 
     @GetMapping("/getHeadLink")
     public ResponseJson<Map<String,String>> getHeadLink(Integer userId){
