@@ -5,6 +5,7 @@ import com.icecream.shares.annotation.Auth;
 import com.icecream.shares.interceptor.LoginInterceptor;
 import com.icecream.shares.pojo.*;
 import com.icecream.shares.service.ConcernService;
+import com.icecream.shares.service.UserInfoService;
 import com.icecream.shares.service.UserService;
 import com.icecream.shares.vo.UserInfoVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class UserController {
     @Autowired
     UserService userServiceImpl;
     @Autowired
-    com.icecream.shares.service.UserInfoService
+    UserInfoService userInfoServiceImpl;
     @Autowired
     ConcernService concernServiceImpl;
     @Auth
@@ -28,7 +29,7 @@ public class UserController {
     public ResponseJson<UserInfo> getUserInfo(){
         Integer userId = Integer.parseInt(LoginInterceptor.getUserId());
 
-        UserInfo userInfo = userInfoServiceImpl.get(userId);
+        UserInfo userInfo = userInfoServiceImpl.getById(userId);
         if (userInfo == null){
             return new ResponseJson<>(ResultCode.UNVALIDPARAMS);
         }else {
@@ -37,7 +38,7 @@ public class UserController {
     }
     @GetMapping("/username")
     public ResponseJson<Object> checkUsername(String username){
-        UserInfo userInfo = userInfoServiceImpl.getUserByUsername(username);
+        UserInfo userInfo = userInfoServiceImpl.getUserInfoByUsername(username);
         if(null == userInfo){
             return new ResponseJson<>(ResultCode.SUCCESS);
         }else {
@@ -48,17 +49,11 @@ public class UserController {
     @PostMapping("/updateInfo")
     public ResponseJson<Object> updateInfo(@RequestBody UserInfoVo userInfoVo){
         Integer userId = Integer.parseInt(LoginInterceptor.getUserId());
-        UserInfo userInfo = userInfoServiceImpl.getById(userId);
-        if(userInfo == null){
-            userInfo = new UserInfo();
-            userInfo.setUserId(userId);
-            userInfo.update(userInfoVo);
-            if(userInfoServiceImpl.save(userInfo)){
-                return new ResponseJson<>(ResultCode.SUCCESS);
-            }
+        userInfoVo.setUserId(userId);
+        if(userInfoServiceImpl.update(userInfoVo)){
+            return new ResponseJson<>(ResultCode.SUCCESS);
         }else {
-            userInfo.update(userInfoVo);
-            userInfoServiceImpl.updateById(userInfo);
+            return new ResponseJson<>(ResultCode.UNVALIDPARAMS);
         }
     }
     @Auth

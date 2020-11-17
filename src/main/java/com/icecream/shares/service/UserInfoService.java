@@ -3,6 +3,7 @@ package com.icecream.shares.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.icecream.shares.pojo.User;
 import com.icecream.shares.pojo.UserInfo;
+import com.icecream.shares.vo.UserInfoVo;
 
 /**
  * @author dqbryant
@@ -18,8 +19,8 @@ public interface UserInfoService extends IService<UserInfo> {
 
     /**
      * 更新用户信息
-     * @param userInfo 更新用户信息
+     * @param userInfoVo 更新用户信息
      * @return 是否成功
      */
-    boolean update(UserInfo userInfo);
+    boolean update(UserInfoVo userInfoVo);
 }

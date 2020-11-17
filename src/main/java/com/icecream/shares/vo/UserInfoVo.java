@@ -14,6 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserInfoVo {
+    private Integer userId;
     private String username;
     private boolean sex;
     private Date birth;

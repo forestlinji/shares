@@ -25,10 +25,10 @@ public class UserInfo {
     private String headLink;
     private Integer shareNum;
     private Integer fanNum;
-    public void update(UserInfoVo userInfoVo){
-        this.username = userInfoVo.getUsername();
-        this.birth = userInfoVo.getBirth();
-        this.sex = userInfoVo.isSex();
-        this.userSign = userInfoVo.getUserSign();
-    }
+//    public void update(UserInfoVo userInfoVo){
+//        this.username = userInfoVo.getUsername();
+//        this.birth = userInfoVo.getBirth();
+//        this.sex = userInfoVo.isSex();
+//        this.userSign = userInfoVo.getUserSign();
+//    }
 }
