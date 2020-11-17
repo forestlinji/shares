@@ -49,7 +49,7 @@ public class UserController {
             return new ResponseJson<>(ResultCode.UNVALIDPARAMS);
         }
 
-        return new ResponseJson<>(ResultCode.UNVALIDPARAMS);
+//        return new ResponseJson<>(ResultCode.UNVALIDPARAMS);
 
     }
 }

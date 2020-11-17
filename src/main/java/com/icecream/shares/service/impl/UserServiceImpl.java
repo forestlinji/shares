@@ -2,6 +2,7 @@ package com.icecream.shares.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
+import com.icecream.shares.mapper.RoleMapper;
 import com.icecream.shares.mapper.UserInfoMapper;
 import com.icecream.shares.pojo.UserInfo;
 
@@ -14,6 +15,8 @@ import com.icecream.shares.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -23,6 +26,9 @@ public class UserServiceImpl implements UserService {
     public PreferService preferService;
     @Autowired
     UserInfoMapper userInfoMapper;
+    @Autowired
+    public RoleMapper roleMapper;
+
     @Override
     public UserInfo getUserInfo(Integer userId) {
         QueryWrapper<UserInfo> queryWrapper = new QueryWrapper<>();
@@ -37,11 +43,36 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findUserByOpenId(String openId) {
+        return userMapper.selectOne(new QueryWrapper<User>().eq("open_id", openId));
+
+    }
+
+    @Override
     public User register(User user) {
         userMapper.insert(user);
         Integer userId = user.getUserId();
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserId(userId);
+        if(user.getUsername()!=null){
+            userInfo.setUsername(user.getUsername());
+        }
+        userInfoMapper.insert(userInfo);
         preferService.register(userId);
+        roleMapper.addRole(userId, 1);
         return user;
 
     }
+
+    @Override
+    public List<String> getRolesByUserId(Integer userId) {
+        return roleMapper.getRolesByUserId(userId);
+    }
+
+    @Override
+    public User findUserByUsername(String username) {
+        return userMapper.selectOne(new QueryWrapper<User>().eq("username", username));
+    }
+
+
 }
