@@ -31,6 +31,7 @@ public class OssServiceImpl implements OssService {
         String link = "shares/post/" + System.currentTimeMillis() + image.getOriginalFilename();
         File cover = FileUtil.MultipartFileToFile(image);
         ossClient.putObject("forestj", link, cover);
+        cover.delete();
         post.setCoverLink(link);
         postService.updateById(post);
         return;
@@ -44,6 +45,7 @@ public class OssServiceImpl implements OssService {
             String link = "shares/post/" + System.currentTimeMillis() + image.getName();
             ossClient.putObject("forestj", link, image);
             urls.add(link);
+            image.delete();
         });
         String picLink = String.join("OVENKFIWHF", urls);
         System.out.println(picLink);

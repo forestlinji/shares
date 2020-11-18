@@ -5,6 +5,7 @@ import com.icecream.shares.annotation.Auth;
 import com.icecream.shares.interceptor.LoginInterceptor;
 import com.icecream.shares.pojo.*;
 import com.icecream.shares.service.ConcernService;
+import com.icecream.shares.service.PostService;
 import com.icecream.shares.service.UserInfoService;
 import com.icecream.shares.service.UserService;
 import com.icecream.shares.vo.UserInfoVo;
@@ -119,5 +120,4 @@ public class UserController {
             return new ResponseJson<>(ResultCode.UNVALIDPARAMS);
         }
     }
-
 }

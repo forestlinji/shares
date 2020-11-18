@@ -7,15 +7,13 @@ import com.icecream.shares.annotation.Auth;
 import com.icecream.shares.interceptor.LoginInterceptor;
 
 import com.icecream.shares.pojo.*;
-import com.icecream.shares.service.CommentService;
-import com.icecream.shares.service.PostService;
+import com.icecream.shares.service.*;
 import com.icecream.shares.vo.CommentVo;
 
 import com.icecream.shares.pojo.PageResult;
 import com.icecream.shares.pojo.Post;
 import com.icecream.shares.pojo.ResponseJson;
 import com.icecream.shares.pojo.ResultCode;
-import com.icecream.shares.service.OssService;
 import com.icecream.shares.service.PostService;
 import com.icecream.shares.utils.FileUtil;
 import com.icecream.shares.vo.AddPostVo;
@@ -52,6 +50,8 @@ public class PostController {
     CommentService commentServiceImpl;
     @Autowired
     public OssService ossService;
+    @Autowired
+    public PostOperationService postOperationService;
 
 
     @GetMapping("get")
@@ -170,5 +170,16 @@ public class PostController {
         return new ResponseJson(ResultCode.SUCCESS);
     }
 
-
+    @GetMapping("/op")
+    @Auth
+    public ResponseJson op(Integer postId,Integer operationType){
+        if(operationType<=0||operationType>=4){
+            return new ResponseJson(ResultCode.UNVALIDPARAMS);
+        }
+        Post post = postService.findCheckedPostById(postId);
+        if (post == null) {
+            return new ResponseJson(ResultCode.UNVALIDPARAMS);
+        }
+        return null;
+    }
 }
