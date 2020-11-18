@@ -80,11 +80,16 @@ public class UserController {
     @Auth
     @DeleteMapping("/cancelConcern")
     public  ResponseJson<Object> cancerConcern(@RequestBody Map<String, String> map) {
-        Integer userId = Integer.parseInt(LoginInterceptor.getUserId());//自己的id
-        Integer cancelConcernedUserId = Integer.parseInt(map.get("userId"));//对方的id
-
-
-        if (concernServiceImpl.remove(concernServiceImpl.cancelConcern(userId, cancelConcernedUserId))) {
+        //自己的id
+        Integer userId = Integer.parseInt(LoginInterceptor.getUserId());
+        //对方的id
+        Integer cancelConcernedUserId = Integer.parseInt(map.get("userId"));
+        User user = userServiceImpl.getById(cancelConcernedUserId);
+        if(null == user || userId.equals(cancelConcernedUserId)){
+            return new ResponseJson<>(ResultCode.UNVALIDPARAMS);
+        }
+        Concern concern = new Concern(userId, cancelConcernedUserId);
+        if (concernServiceImpl.cancelConcern(concern) == 1) {
             return new ResponseJson<>(ResultCode.SUCCESS);
         } else {
             return new ResponseJson<>(ResultCode.UNVALIDPARAMS);

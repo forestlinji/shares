@@ -1,5 +1,6 @@
 package com.icecream.shares.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -30,12 +31,21 @@ public class ConcernServiceImpl extends ServiceImpl<ConcernMapper, Concern> impl
         }
         return 0;
     }
+
     @Override
-    public QueryWrapper<Concern> cancelConcern(Integer concernUserId, Integer concernedUserId) {
-        QueryWrapper<Concern> queryWrapper = new QueryWrapper<>();
-
-        queryWrapper.eq("concern_user_id",concernUserId).eq("concerned_user_id",concernedUserId);
-
-        return queryWrapper;
+    public int cancelConcern(Concern concern) {
+        if(baseMapper.deleteConcern(concern) == 1){
+            return userInfoMapper.update(null, new UpdateWrapper<UserInfo>().setSql("fan_num = fan_num - 1").eq("user_id", concern.getConcernedUserId()));
+        }
+        return 0;
     }
+//
+//    @Override
+//    public QueryWrapper<Concern> cancelConcern(Integer concernUserId, Integer concernedUserId) {
+//        QueryWrapper<Concern> queryWrapper = new QueryWrapper<>();
+//
+//        queryWrapper.eq("concern_user_id",concernUserId).eq("concerned_user_id",concernedUserId);
+//
+//        return queryWrapper;
+//    }
 }
