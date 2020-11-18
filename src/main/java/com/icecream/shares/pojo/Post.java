@@ -14,25 +14,25 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Post {
   @TableId
-  private long postId;
-  private long releaseId;
+  private Integer postId;
+  private Integer releaseId;
   private java.sql.Timestamp releaseTime;
   private String title;
   private String content;
   @JsonIgnore
-  private long checkState;
+  private Integer checkState;
   @TableLogic
   @JsonIgnore
-  private long deleted;
+  private Integer deleted;
   private String coverLink;
   private String picLink;
-  private long beauty;
-  private long price;
-  private long type;
-  private long quality;
-  private long collectNum;
-  private long goodNum;
-  private long badNum;
+  private Integer beauty;
+  private Integer price;
+  private Integer type;
+  private Integer quality;
+  private Integer collectNum;
+  private Integer goodNum;
+  private Integer badNum;
 
 
 }
