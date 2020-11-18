@@ -9,15 +9,15 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class OssConfig {
-//    @Value("${oss.endpoint}")
-//    private String endpoint;
-//    @Value("${oss.accessKeyId}")
-//    private String accessKeyId;
-//    @Value("${oss.accessKeySecret}")
-//    private String accessKeySecret;
-//
-//    @Bean
-//    public OSS oss(){
-//        return new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
-//    }
+    @Value("${oss.endpoint}")
+    private String endpoint;
+    @Value("${oss.accessKeyId}")
+    private String accessKeyId;
+    @Value("${oss.accessKeySecret}")
+    private String accessKeySecret;
+
+    @Bean
+    public OSS oss(){
+        return new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
+    }
 }

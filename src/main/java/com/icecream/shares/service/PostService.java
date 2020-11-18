@@ -5,6 +5,8 @@ import com.icecream.shares.pojo.PageResult;
 import com.icecream.shares.pojo.Post;
 import com.icecream.shares.vo.SearchPostVo;
 
+import java.io.File;
+
 public interface PostService extends IService<Post> {
     /**
      * 根据postId查找已过审的帖子
@@ -22,4 +24,6 @@ public interface PostService extends IService<Post> {
      * @return
      */
     public PageResult<SearchPostVo> getPostBySearch(Integer pageNum, Integer pageSize, String keyword);
+
+    public void saveImagesLocal(File[] images, Integer postId);
 }

@@ -5,17 +5,39 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.icecream.shares.annotation.Auth;
 import com.icecream.shares.interceptor.LoginInterceptor;
+
 import com.icecream.shares.pojo.*;
 import com.icecream.shares.service.CommentService;
 import com.icecream.shares.service.PostService;
 import com.icecream.shares.vo.CommentVo;
+
+import com.icecream.shares.pojo.PageResult;
+import com.icecream.shares.pojo.Post;
+import com.icecream.shares.pojo.ResponseJson;
+import com.icecream.shares.pojo.ResultCode;
+import com.icecream.shares.service.OssService;
+import com.icecream.shares.service.PostService;
+import com.icecream.shares.utils.FileUtil;
+import com.icecream.shares.vo.AddPostVo;
+
 import com.icecream.shares.vo.SearchPostVo;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 
 import java.sql.Timestamp;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.io.File;
+import java.sql.Timestamp;
+import java.util.Arrays;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,6 +50,9 @@ public class PostController {
     public PostService postService;
     @Autowired
     CommentService commentServiceImpl;
+    @Autowired
+    public OssService ossService;
+
 
     @GetMapping("get")
     public ResponseJson<Post> getPost(Integer postId){
@@ -49,6 +74,7 @@ public class PostController {
         PageResult<SearchPostVo> searchPostVoPageResult = postService.getPostBySearch(pageNum, pageSize, keyword);
         return new ResponseJson<>(ResultCode.SUCCESS, searchPostVoPageResult);
     }
+
     @Auth
     @DeleteMapping("/delete")
     public ResponseJson<Object> deletePost(Integer postId){
@@ -105,4 +131,44 @@ public class PostController {
         }
         return new ResponseJson<>(ResultCode.SUCCESS, new PageResult<>(commentServiceImpl.getCommentsPage(postId, pageNum, pageSize)));
     }
+
+
+    @PostMapping("add")
+    @Auth
+    public ResponseJson addPost(@Valid AddPostVo addPostVo) throws Exception {
+//        System.out.println(addPostVo);
+        Integer userId = Integer.parseInt(LoginInterceptor.getUserId());//自己的id
+        String suffixList = "jpg,jpeg,png,gif";
+        MultipartFile[] images = addPostVo.getImages();
+        if (ArrayUtils.isEmpty(images)) {
+            return new ResponseJson(ResultCode.WRONGFORMAT);
+        }
+        for (MultipartFile image : images) {
+            String uploadFileName = image.getOriginalFilename();
+            String suffix = uploadFileName.substring(uploadFileName.lastIndexOf(".")
+                    + 1);
+            if(!suffixList.contains(suffix) || image.getOriginalFilename().contains("OVENKFIWHF")){
+                return new ResponseJson(ResultCode.WRONGFORMAT);
+            }
+        }
+        Post post = new Post();
+        BeanUtils.copyProperties(addPostVo, post);
+        post.setReleaseTime(new Timestamp(System.currentTimeMillis()));
+        post.setDeleted(0);
+        post.setCheckState(0);
+        post.setReleaseId(userId);
+        postService.save(post);
+        Integer postId = post.getPostId();
+        ossService.updateCover(images[0], post);
+        if(images.length > 1){
+            File[] files = new File[images.length - 1];
+            for (int i = 1; i < images.length; i++) {
+                files[i-1] = FileUtil.MultipartFileToFile(images[i]);
+            }
+            ossService.updateImages(files, post);
+        }
+        return new ResponseJson(ResultCode.SUCCESS);
+    }
+
+
 }

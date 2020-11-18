@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,5 +51,14 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
         searchPostVoPageResult.setSize(page.getSize());
         searchPostVoPageResult.setTotal(page.getTotal());
         return searchPostVoPageResult;
+    }
+
+    @Override
+    public void saveImagesLocal(File[] images,Integer postId) {
+        File file=new File("./shares/post_cover_"+ postId);
+        if(!file.exists()){//如果文件夹不存在
+            file.mkdir();//创建文件夹
+        }
+
     }
 }
