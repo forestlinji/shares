@@ -30,6 +30,7 @@ import java.util.Objects;
 
 @RequestMapping("/user")
 @RestController
+@CrossOrigin
 public class AuthController {
     @Autowired
     public UserService userService;
