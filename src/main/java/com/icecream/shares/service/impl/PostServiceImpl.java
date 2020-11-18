@@ -10,6 +10,7 @@ import com.icecream.shares.pojo.Notice;
 import com.icecream.shares.pojo.PageResult;
 import com.icecream.shares.pojo.Post;
 import com.icecream.shares.service.PostService;
+import com.icecream.shares.vo.PostVo;
 import com.icecream.shares.vo.SearchPostVo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -32,7 +33,7 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
         Post post = postMapper.selectOne(new QueryWrapper<Post>().eq("post_id", postId).eq("check_state", 1));
         return post;
     }
-
+    @Override
     public PageResult<SearchPostVo> getPostBySearch(Integer pageNum, Integer pageSize, String keyword) {
         QueryWrapper<Post> wrapper = new QueryWrapper<>();
         if(!StringUtils.isBlank(keyword)){
@@ -60,5 +61,16 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
             file.mkdir();//创建文件夹
         }
 
+    }
+
+
+    @Override
+    public List<PostVo> getPostProcess(Integer userId, Integer type) {
+        return baseMapper.getPostProcess(userId, type);
+    }
+
+    @Override
+    public List<PostVo> getCollections(Integer userId, Integer type) {
+        return baseMapper.getCollections(userId, type);
     }
 }

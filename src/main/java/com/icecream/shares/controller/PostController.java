@@ -18,6 +18,7 @@ import com.icecream.shares.service.PostService;
 import com.icecream.shares.utils.FileUtil;
 import com.icecream.shares.vo.AddPostVo;
 
+import com.icecream.shares.vo.PostVo;
 import com.icecream.shares.vo.SearchPostVo;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -181,5 +182,23 @@ public class PostController {
             return new ResponseJson(ResultCode.UNVALIDPARAMS);
         }
         return null;
+    }
+    @Auth
+    @GetMapping("/getProcess")
+    public ResponseJson<List<PostVo>> getProcess(Integer type){
+        if(type > 2 || type < 0){
+            return new ResponseJson<>(ResultCode.UNVALIDPARAMS);
+        }
+        Integer userId = Integer.parseInt(LoginInterceptor.getUserId());
+        return new ResponseJson<>(ResultCode.SUCCESS, postService.getPostProcess(userId, type));
+    }
+    @Auth
+    @GetMapping("/getCollections")
+    public ResponseJson<List<PostVo>> getCollections(Integer type){
+        if(type > 3 || type < 1){
+            return new ResponseJson<>(ResultCode.UNVALIDPARAMS);
+        }
+        Integer userId = Integer.parseInt(LoginInterceptor.getUserId());
+        return new ResponseJson<>(ResultCode.SUCCESS, postService.getCollections(userId, type));
     }
 }

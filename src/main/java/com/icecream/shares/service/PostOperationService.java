@@ -1,4 +1,10 @@
 package com.icecream.shares.service;
 
-public interface PostOperationService {
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.icecream.shares.pojo.Post;
+import com.icecream.shares.pojo.PostOperation;
+
+import java.util.List;
+
+public interface PostOperationService extends IService<PostOperation> {
 }
