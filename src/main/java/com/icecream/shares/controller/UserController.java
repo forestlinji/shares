@@ -106,7 +106,7 @@ public class UserController {
 
     }
     @Auth
-    @GetMapping("/getConcerned")
+    @GetMapping("/getFan")
     public ResponseJson<List<ConcernList>> getConcerned(){
         Integer userId = Integer.parseInt(LoginInterceptor.getUserId());
 
