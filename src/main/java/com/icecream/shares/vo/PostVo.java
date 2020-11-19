@@ -15,7 +15,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 public class PostVo {
     private Integer postId;
-    private String postTitle;
+    private String title;
     private String coverLink;
     private Timestamp releaseTime;
 }

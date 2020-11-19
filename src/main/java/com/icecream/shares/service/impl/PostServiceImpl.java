@@ -11,6 +11,7 @@ import com.icecream.shares.pojo.PageResult;
 import com.icecream.shares.pojo.Post;
 import com.icecream.shares.service.PostService;
 import com.icecream.shares.vo.PostVo;
+import com.icecream.shares.vo.PostVo2;
 import com.icecream.shares.vo.SearchPostVo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -72,5 +73,11 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
     @Override
     public List<PostVo> getCollections(Integer userId, Integer type) {
         return baseMapper.getCollections(userId, type);
+    }
+
+    @Override
+    public IPage<PostVo2> getHistory(Integer userId, Integer pageNum, Integer pageSize) {
+        Page<PostVo2> postVo2Page = new Page<>(pageNum, pageSize);
+        return baseMapper.getPostHistory(userId, postVo2Page);
     }
 }

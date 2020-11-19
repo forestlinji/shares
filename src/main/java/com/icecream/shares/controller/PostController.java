@@ -9,7 +9,7 @@ import com.icecream.shares.interceptor.LoginInterceptor;
 
 import com.icecream.shares.pojo.*;
 import com.icecream.shares.service.*;
-import com.icecream.shares.vo.CommentVo;
+import com.icecream.shares.vo.*;
 
 import com.icecream.shares.pojo.PageResult;
 import com.icecream.shares.pojo.Post;
@@ -17,14 +17,8 @@ import com.icecream.shares.pojo.ResponseJson;
 import com.icecream.shares.pojo.ResultCode;
 import com.icecream.shares.service.PostService;
 import com.icecream.shares.utils.FileUtil;
-import com.icecream.shares.vo.AddPostVo;
 
 
-import com.icecream.shares.vo.PostVo;
-
-import com.icecream.shares.vo.PostStatusVo;
-
-import com.icecream.shares.vo.SearchPostVo;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -302,11 +296,14 @@ public class PostController {
     }
     @Auth
     @GetMapping("/getCollections")
-    public ResponseJson<List<PostVo>> getCollections(Integer type){
-        if(type > 3 || type < 1){
-            return new ResponseJson<>(ResultCode.UNVALIDPARAMS);
-        }
+    public ResponseJson<List<PostVo>> getCollections(){
         Integer userId = Integer.parseInt(LoginInterceptor.getUserId());
-        return new ResponseJson<>(ResultCode.SUCCESS, postService.getCollections(userId, type));
+        return new ResponseJson<>(ResultCode.SUCCESS, postService.getCollections(userId, 1));
+    }
+    @GetMapping("/self")
+    public ResponseJson<PageResult<PostVo2>> getPostHistory(Integer userId,
+                                                            @RequestParam(required = false, defaultValue = "1") Integer pageNum,
+                                                            @RequestParam(required = false, defaultValue = "4") Integer pageSize){
+        return new ResponseJson<>(ResultCode.SUCCESS, new PageResult<>(postService.getHistory(userId, pageNum, pageSize)));
     }
 }

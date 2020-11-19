@@ -1,9 +1,11 @@
 package com.icecream.shares.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.icecream.shares.pojo.PageResult;
 import com.icecream.shares.pojo.Post;
 import com.icecream.shares.vo.PostVo;
+import com.icecream.shares.vo.PostVo2;
 import com.icecream.shares.vo.SearchPostVo;
 
 import java.io.File;
@@ -32,4 +34,6 @@ public interface PostService extends IService<Post> {
     List<PostVo> getPostProcess(Integer userId, Integer type);
 
     List<PostVo> getCollections(Integer userId, Integer type);
+
+    IPage<PostVo2> getHistory(Integer userId, Integer pageNum, Integer pageSize);
 }

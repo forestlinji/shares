@@ -1,8 +1,11 @@
 package com.icecream.shares.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.icecream.shares.pojo.Post;
 import com.icecream.shares.vo.PostVo;
+import com.icecream.shares.vo.PostVo2;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
@@ -29,4 +32,7 @@ public interface PostMapper extends BaseMapper<Post> {
      */
     @Select("select post_id, title, cover_link from post where post_id in (select post_id from post_operation where operator_id = #{userId} and operation_type = #{type})")
     List<PostVo> getCollections(Integer userId, Integer type);
+
+    @Select("select post_id, title, content, cover_link from post where release_id = #{userId}")
+    IPage<PostVo2> getPostHistory(Integer userId, Page<PostVo2> page);
 }
