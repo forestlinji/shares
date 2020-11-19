@@ -1,5 +1,6 @@
 package com.icecream.shares.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.icecream.shares.mapper.PreferMapper;
 
 import com.icecream.shares.pojo.Prefer;
@@ -8,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PreferServiceImpl implements PreferService {
+public class PreferServiceImpl extends ServiceImpl<PreferMapper, Prefer> implements PreferService {
     @Autowired
     public PreferMapper preferMapper;
 

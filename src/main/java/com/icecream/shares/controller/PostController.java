@@ -1,6 +1,7 @@
 package com.icecream.shares.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.icecream.shares.annotation.Auth;
@@ -18,7 +19,11 @@ import com.icecream.shares.service.PostService;
 import com.icecream.shares.utils.FileUtil;
 import com.icecream.shares.vo.AddPostVo;
 
+
 import com.icecream.shares.vo.PostVo;
+
+import com.icecream.shares.vo.PostStatusVo;
+
 import com.icecream.shares.vo.SearchPostVo;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -53,6 +58,8 @@ public class PostController {
     public OssService ossService;
     @Autowired
     public PostOperationService postOperationService;
+    @Autowired
+    public PreferService preferService;
 
 
     @GetMapping("get")
@@ -178,10 +185,111 @@ public class PostController {
             return new ResponseJson(ResultCode.UNVALIDPARAMS);
         }
         Post post = postService.findCheckedPostById(postId);
+        Integer userId = Integer.parseInt(LoginInterceptor.getUserId());
+
         if (post == null) {
             return new ResponseJson(ResultCode.UNVALIDPARAMS);
         }
-        return null;
+        PostOperation postOperation = postOperationService.getOne(new QueryWrapper<PostOperation>()
+                .eq("post_id", postId)
+                .eq("operator_id", userId)
+                .eq("operation_type", operationType));
+        if(postOperation!=null){
+            return new ResponseJson(ResultCode.UNVALIDPARAMS);
+        }
+        postOperation = new PostOperation();
+        postOperation.setOperatorId(userId);
+        postOperation.setOperationType(operationType);
+        postOperation.setOperationTime(new Timestamp(System.currentTimeMillis()));
+        postOperation.setPostId(postId);
+        postOperationService.save(postOperation);
+        UpdateWrapper<Prefer> wrapper = new UpdateWrapper<Prefer>().eq("user_id", userId);
+        switch (post.getType()){
+            case 0:
+                wrapper.setSql("study = study + 1");
+                break;
+            case 1:
+                wrapper.setSql("food = food + 1");
+                break;
+            case 2:
+                wrapper.setSql("cloth = cloth + 1");
+                break;
+            case 3:
+                wrapper.setSql("room = room + 1");
+                break;
+            case 4:
+                wrapper.setSql("other = other + 1");
+                break;
+        }
+        preferService.update(wrapper);
+        return new ResponseJson(ResultCode.SUCCESS);
+    }
+
+    @DeleteMapping("deop")
+    @Auth
+    public ResponseJson deop(Integer postId,Integer operationType){
+        if(operationType<=0||operationType>=4){
+            return new ResponseJson(ResultCode.UNVALIDPARAMS);
+        }
+        Post post = postService.findCheckedPostById(postId);
+        Integer userId = Integer.parseInt(LoginInterceptor.getUserId());
+
+        if (post == null) {
+            return new ResponseJson(ResultCode.UNVALIDPARAMS);
+        }
+        PostOperation postOperation = postOperationService.getOne(new QueryWrapper<PostOperation>()
+                .eq("post_id", postId)
+                .eq("operator_id", userId)
+                .eq("operation_type", operationType));
+        if(postOperation==null){
+            return new ResponseJson(ResultCode.UNVALIDPARAMS);
+        }
+        postOperationService.removeById(postOperation.getOperationId());
+        UpdateWrapper<Prefer> wrapper = new UpdateWrapper<Prefer>().eq("user_id", userId);
+        switch (post.getType()){
+            case 0:
+                wrapper.setSql("study = study - 1");
+                break;
+            case 1:
+                wrapper.setSql("food = food - 1");
+                break;
+            case 2:
+                wrapper.setSql("cloth = cloth - 1");
+                break;
+            case 3:
+                wrapper.setSql("room = room - 1");
+                break;
+            case 4:
+                wrapper.setSql("other = other - 1");
+                break;
+        }
+        preferService.update(wrapper);
+        return new ResponseJson(ResultCode.SUCCESS);
+    }
+
+    @GetMapping("getStatus")
+    @Auth
+    public ResponseJson<PostStatusVo> getStatus(Integer postId){
+        Post post = postService.findCheckedPostById(postId);
+        Integer userId = Integer.parseInt(LoginInterceptor.getUserId());
+        if (post == null) {
+            return new ResponseJson(ResultCode.UNVALIDPARAMS);
+        }
+        List<PostOperation> postOperations = postOperationService.list(new QueryWrapper<PostOperation>()
+                .eq("user_id", userId)
+                .eq("post_id", postId));
+        PostStatusVo postStatusVo = new PostStatusVo();
+        for (PostOperation postOperation : postOperations) {
+            Integer type = postOperation.getOperationType();
+            if(type == 1){
+                postStatusVo.setCollect(true);
+            }else if(type == 2){
+                postStatusVo.setBad(true);
+            }else{
+                postStatusVo.setGood(true);
+            }
+        }
+        return new ResponseJson<>(ResultCode.SUCCESS, postStatusVo);
     }
     @Auth
     @GetMapping("/getProcess")
