@@ -11,19 +11,19 @@ import java.util.concurrent.TimeUnit;
 
 @SpringBootTest
 public class AuthControllerTest {
-    @Autowired
-    public UserService userService;
-    @Autowired
-    public StringRedisTemplate redisTemplate;
-
-    @Test
-    public void testSelectUser(){
-        User user = userService.findUserByPhone("18959121464");
-        System.out.println(user);
-    }
-
-    @Test
-    public void testRedis(){
-        System.out.println(redisTemplate.getExpire("code:123456", TimeUnit.SECONDS));
-    }
+//    @Autowired
+//    public UserService userService;
+//    @Autowired
+//    public StringRedisTemplate redisTemplate;
+//
+//    @Test
+//    public void testSelectUser(){
+//        User user = userService.findUserByPhone("18959121464");
+//        System.out.println(user);
+//    }
+//
+//    @Test
+//    public void testRedis(){
+//        System.out.println(redisTemplate.getExpire("code:123456", TimeUnit.SECONDS));
+//    }
 }

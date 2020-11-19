@@ -270,7 +270,7 @@ public class PostController {
             return new ResponseJson(ResultCode.UNVALIDPARAMS);
         }
         List<PostOperation> postOperations = postOperationService.list(new QueryWrapper<PostOperation>()
-                .eq("user_id", userId)
+                .eq("operator_id", userId)
                 .eq("post_id", postId));
         PostStatusVo postStatusVo = new PostStatusVo();
         for (PostOperation postOperation : postOperations) {

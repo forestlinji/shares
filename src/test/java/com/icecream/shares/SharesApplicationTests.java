@@ -8,9 +8,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class SharesApplicationTests {
 
-    @Test
-    void contextLoads() {
-        System.out.println(MD5Utils.cptry("1" + "123456" + "1"));
-    }
+//    @Test
+//    void contextLoads() {
+//        System.out.println(MD5Utils.cptry("1" + "123456" + "1"));
+//    }
 
 }

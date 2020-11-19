@@ -22,6 +22,7 @@ import java.util.List;
 public class ConcernServiceImpl extends ServiceImpl<ConcernMapper, Concern> implements ConcernService  {
     @Autowired
     UserInfoMapper userInfoMapper;
+
     @Override
     public int addConcern(Concern concern) {
         if(baseMapper.insertOrIgnore(concern) == 1) {
@@ -32,6 +33,7 @@ public class ConcernServiceImpl extends ServiceImpl<ConcernMapper, Concern> impl
 
     @Override
     public int cancelConcern(Concern concern) {
+
         if(baseMapper.deleteConcern(concern) == 1){
             return userInfoMapper.update(null, new UpdateWrapper<UserInfo>().setSql("fan_num = fan_num - 1").eq("user_id", concern.getConcernedUserId()));
         }
@@ -40,15 +42,11 @@ public class ConcernServiceImpl extends ServiceImpl<ConcernMapper, Concern> impl
     @Override
     public List<ConcernList> getConcern(Integer userId)
     {
-
-
         return baseMapper.getConcern(userId);
     }
     @Override
     public List<ConcernList> getConcerned(Integer userId)
     {
-
-
         return baseMapper.getConcerned(userId);
     }
 //

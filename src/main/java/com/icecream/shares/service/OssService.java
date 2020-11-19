@@ -16,6 +16,14 @@ public interface OssService {
      */
     void updateCover(MultipartFile image, Post post) throws Exception;
 
+    /**
+     * 上传其他图片
+     * @param images
+     * @param post
+     */
     @Async
     void updateImages(File[] images, Post post);
+
+
+    void updateHeadImage(File image);
 }

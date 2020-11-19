@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostStatusVo {
-    private Boolean good;
-    private Boolean bad;
-    private Boolean collect;
+    private Boolean good = false;
+    private Boolean bad = false;
+    private Boolean collect = false;
 }
