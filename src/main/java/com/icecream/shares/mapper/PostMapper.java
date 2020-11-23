@@ -35,4 +35,5 @@ public interface PostMapper extends BaseMapper<Post> {
 
     @Select("select post_id, title, content, cover_link from post where release_id = #{userId}")
     IPage<PostVo2> getPostHistory(Integer userId, Page<PostVo2> page);
+
 }

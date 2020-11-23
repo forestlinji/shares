@@ -1,9 +1,12 @@
 package com.icecream.shares.controller;
 
+import cn.hutool.core.collection.CollectionUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.gson.JsonObject;
 import com.icecream.shares.annotation.Auth;
 import com.icecream.shares.interceptor.LoginInterceptor;
 
@@ -23,6 +26,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,10 +38,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.sql.Timestamp;
-import java.util.Arrays;
+import java.util.*;
 
-import java.util.List;
-import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @RestController
@@ -54,6 +57,8 @@ public class PostController {
     public PostOperationService postOperationService;
     @Autowired
     public PreferService preferService;
+    @Autowired
+    public StringRedisTemplate redisTemplate;
 
 
     @GetMapping("get")
@@ -168,6 +173,9 @@ public class PostController {
                 files[i-1] = FileUtil.MultipartFileToFile(images[i]);
             }
             ossService.updateImages(files, post);
+        }else{
+            post.setCheckState(1);
+            postService.updateById(post);
         }
         return new ResponseJson(ResultCode.SUCCESS);
     }
@@ -305,5 +313,53 @@ public class PostController {
                                                             @RequestParam(required = false, defaultValue = "1") Integer pageNum,
                                                             @RequestParam(required = false, defaultValue = "4") Integer pageSize){
         return new ResponseJson<>(ResultCode.SUCCESS, new PageResult<>(postService.getHistory(userId, pageNum, pageSize)));
+    }
+
+    @GetMapping("advice")
+    @Auth
+    public ResponseJson getAdvice(){
+        Integer userId = Integer.parseInt(LoginInterceptor.getUserId());
+        String cacheAdvice = redisTemplate.opsForValue().get("advice_" + userId);
+        if(cacheAdvice !=null){
+            List list = JSONObject.parseObject(cacheAdvice, List.class);
+            Collections.shuffle(list);
+            return new ResponseJson(ResultCode.SUCCESS, list.subList(0,4));
+        }
+        Prefer prefer = preferService.getById(userId);
+        PreferAdvice preferAdvice = new PreferAdvice(prefer);
+//        if(preferAdvice.getSum()<10){
+//            PageResult<SearchPostVo> postBySearch = postService.getPostBySearch(1, 4, "");
+//            return new ResponseJson(ResultCode.SUCCESS, postBySearch.getRecords());
+//        }
+        List<Post> records = postService.page(
+                new Page<Post>(1, 100),
+                new QueryWrapper<Post>().ne("release_id", userId)
+                        .eq("check_state", 1)
+                        .orderByDesc("release_time")).getRecords();
+        Set<Integer> userList = records.stream().map(Post::getReleaseId).collect(Collectors.toSet());
+        List<Prefer> prefers = preferService.listByIds(userList);
+        Map<Integer, Prefer> userPrefer = prefers.stream().collect(Collectors.toMap(Prefer::getUserId, item -> item));
+        Map<Integer, Post> posts = records.stream().collect(Collectors.toMap(Post::getPostId, item -> item));
+        List<PreferAdvice> advices = records.stream().map(item -> {
+            PreferAdvice prefera = new PreferAdvice(userPrefer.get(item.getReleaseId()));
+            prefera.setPostId(item.getPostId());
+            return prefera;
+        }).collect(Collectors.toList());
+        postService.computeAlike(preferAdvice, advices);
+        List<PreferAdvice> preferAdvices;
+        if(advices.size() > 10){
+            preferAdvices = advices.subList(0, 10);
+        }else{
+            preferAdvices = advices;
+        }
+        List<PostVo> postVoList = preferAdvices.stream().map(advice -> {
+            PostVo postVo = new PostVo();
+            BeanUtils.copyProperties(posts.get(advice.getPostId()), postVo);
+            return postVo;
+        }).collect(Collectors.toList());
+        String jsonString = JSONObject.toJSONString(postVoList);
+        redisTemplate.opsForValue().set("advice_" + userId, jsonString, 60, TimeUnit.MINUTES);
+        Collections.shuffle(postVoList);
+        return new ResponseJson(ResultCode.SUCCESS, postVoList.subList(0,4));
     }
 }
