@@ -30,9 +30,9 @@ public interface PostMapper extends BaseMapper<Post> {
      * @param type 操作类型
      * @return 帖子信息
      */
-    @Select("select post_id, title, cover_link from post where post_id in (select post_id from post_operation where operator_id = #{userId} and operation_type = #{type})")
+    @Select("select post_id, title, cover_link from post where post_id in (select post_id from post_operation where operator_id = #{userId} and operation_type = #{type}) and deleted = 0")
     List<PostVo> getCollections(Integer userId, Integer type);
 
-    @Select("select post_id, title, content, cover_link from post where release_id = #{userId}")
+    @Select("select post_id, title, content, cover_link from post where release_id = #{userId} and deleted = 0")
     IPage<PostVo2> getPostHistory(Integer userId, Page<PostVo2> page);
 }
