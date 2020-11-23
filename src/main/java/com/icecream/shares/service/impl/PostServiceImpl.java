@@ -9,7 +9,9 @@ import com.icecream.shares.mapper.PostMapper;
 import com.icecream.shares.pojo.Notice;
 import com.icecream.shares.pojo.PageResult;
 import com.icecream.shares.pojo.Post;
+import com.icecream.shares.pojo.PreferAdvice;
 import com.icecream.shares.service.PostService;
+import com.icecream.shares.utils.AlgorithmUtil;
 import com.icecream.shares.vo.PostVo;
 import com.icecream.shares.vo.PostVo2;
 import com.icecream.shares.vo.SearchPostVo;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.io.File;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -79,5 +82,15 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
     public IPage<PostVo2> getHistory(Integer userId, Integer pageNum, Integer pageSize) {
         Page<PostVo2> postVo2Page = new Page<>(pageNum, pageSize);
         return baseMapper.getPostHistory(userId, postVo2Page);
+    }
+
+    @Override
+    public void computeAlike(PreferAdvice preferAdvice, List<PreferAdvice> advices) {
+        double[] my=new double[]{preferAdvice.getCloth(),preferAdvice.getFood(),preferAdvice.getOthers(),preferAdvice.getRoom(),preferAdvice.getStudy()};
+        advices.forEach(advice->{
+            double[] other=new double[]{advice.getCloth(),advice.getFood(),advice.getOthers(),advice.getRoom(),advice.getStudy()};
+            advice.setAlike(AlgorithmUtil.getPearsonCorrelationScore(my,other));
+        });
+        advices.sort(Comparator.comparingDouble(advice->-advice.getAlike()));
     }
 }

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public enum ResultCode {
+
     SUCCESS(200,"成功"),
     ERROR(500,"服务器繁忙"),
     ERRORMETHOD(501,"接口调用方式错误"),

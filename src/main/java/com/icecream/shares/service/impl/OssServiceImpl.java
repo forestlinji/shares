@@ -1,9 +1,12 @@
 package com.icecream.shares.service.impl;
 
 import com.aliyun.oss.OSS;
+import com.icecream.shares.interceptor.LoginInterceptor;
 import com.icecream.shares.pojo.Post;
+import com.icecream.shares.pojo.UserInfo;
 import com.icecream.shares.service.OssService;
 import com.icecream.shares.service.PostService;
+import com.icecream.shares.service.UserInfoService;
 import com.icecream.shares.utils.FileUtil;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +27,8 @@ public class OssServiceImpl implements OssService {
     OSS ossClient;
     @Autowired
     PostService postService;
+    @Autowired
+    UserInfoService userInfoService;
 
 
     @Override
@@ -52,5 +57,17 @@ public class OssServiceImpl implements OssService {
         post.setPicLink(picLink);
         post.setCheckState(1);
         postService.updateById(post);
+    }
+
+    @Override
+    public void updateHeadImage(File image) {
+        String link = "shares/head/" + System.currentTimeMillis() + image.getName();
+        ossClient.putObject("forestj", link, image);
+        int userId = Integer.parseInt(LoginInterceptor.getUserId());
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserId(userId);
+        userInfo.setHeadLink(link);
+        userInfoService.updateById(userInfo);
+        image.delete();
     }
 }

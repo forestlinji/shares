@@ -1,20 +1,18 @@
 package com.icecream.shares.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.icecream.shares.mapper.ConcernMapper;
 import com.icecream.shares.mapper.UserInfoMapper;
-import com.icecream.shares.mapper.UserMapper;
 import com.icecream.shares.pojo.Concern;
-import com.icecream.shares.pojo.User;
 import com.icecream.shares.pojo.UserInfo;
+import com.icecream.shares.pojo.ConcernList;
 import com.icecream.shares.service.ConcernService;
-import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 
 /**
  * @author dqbryant
@@ -24,6 +22,7 @@ import org.springframework.stereotype.Service;
 public class ConcernServiceImpl extends ServiceImpl<ConcernMapper, Concern> implements ConcernService  {
     @Autowired
     UserInfoMapper userInfoMapper;
+
     @Override
     public int addConcern(Concern concern) {
         if(baseMapper.insertOrIgnore(concern) == 1) {
@@ -34,10 +33,21 @@ public class ConcernServiceImpl extends ServiceImpl<ConcernMapper, Concern> impl
 
     @Override
     public int cancelConcern(Concern concern) {
+
         if(baseMapper.deleteConcern(concern) == 1){
             return userInfoMapper.update(null, new UpdateWrapper<UserInfo>().setSql("fan_num = fan_num - 1").eq("user_id", concern.getConcernedUserId()));
         }
         return 0;
+    }
+    @Override
+    public List<ConcernList> getConcern(Integer userId)
+    {
+        return baseMapper.getConcern(userId);
+    }
+    @Override
+    public List<ConcernList> getConcerned(Integer userId)
+    {
+        return baseMapper.getConcerned(userId);
     }
 //
 //    @Override

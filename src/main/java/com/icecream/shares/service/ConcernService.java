@@ -1,8 +1,10 @@
 package com.icecream.shares.service;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.icecream.shares.pojo.Concern;
+import com.icecream.shares.pojo.ConcernList;
+
+import java.util.List;
 
 /**
  * @author dqbryant
@@ -23,4 +25,8 @@ public interface ConcernService extends IService<Concern> {
      * @return 返回数据库影响的行数
      */
     int cancelConcern(Concern concern);
+
+    List<ConcernList> getConcern(Integer userId);
+
+    List<ConcernList> getConcerned(Integer userId);
 }
