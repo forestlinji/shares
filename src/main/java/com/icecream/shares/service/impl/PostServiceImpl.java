@@ -32,6 +32,7 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
     @Autowired
     public PostMapper postMapper;
 
+
     @Override
     public Post findCheckedPostById(Integer postId) {
         Post post = postMapper.selectOne(new QueryWrapper<Post>().eq("post_id", postId).eq("check_state", 1));

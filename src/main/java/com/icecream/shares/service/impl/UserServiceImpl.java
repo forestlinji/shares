@@ -12,6 +12,7 @@ import com.icecream.shares.pojo.UserInfo;
 import com.icecream.shares.mapper.UserMapper;
 import com.icecream.shares.pojo.Prefer;
 import com.icecream.shares.pojo.User;
+import com.icecream.shares.service.NoticeService;
 import com.icecream.shares.service.PreferService;
 
 import com.icecream.shares.service.UserService;
@@ -36,6 +37,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     UserInfoMapper userInfoMapper;
     @Autowired
     public RoleMapper roleMapper;
+    @Autowired
+    NoticeService noticeService;
 
     @Override
     public UserInfo getUserInfo(Integer userId) {
@@ -98,6 +101,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         userInfoMapper.insert(userInfo);
         preferService.register(userId);
         roleMapper.addRole(userId, 1);
+        noticeService.sendRegister(userId);
         return user;
 
     }

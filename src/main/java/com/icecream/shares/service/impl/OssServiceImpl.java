@@ -4,6 +4,7 @@ import com.aliyun.oss.OSS;
 import com.icecream.shares.interceptor.LoginInterceptor;
 import com.icecream.shares.pojo.Post;
 import com.icecream.shares.pojo.UserInfo;
+import com.icecream.shares.service.NoticeService;
 import com.icecream.shares.service.OssService;
 import com.icecream.shares.service.PostService;
 import com.icecream.shares.service.UserInfoService;
@@ -29,7 +30,8 @@ public class OssServiceImpl implements OssService {
     PostService postService;
     @Autowired
     UserInfoService userInfoService;
-
+    @Autowired
+    NoticeService noticeService;
 
     @Override
     public void updateCover(MultipartFile image, Post post) throws Exception {
@@ -57,6 +59,7 @@ public class OssServiceImpl implements OssService {
         post.setPicLink(picLink);
         post.setCheckState(1);
         postService.updateById(post);
+        noticeService.sendCheck(post);
     }
 
     @Override

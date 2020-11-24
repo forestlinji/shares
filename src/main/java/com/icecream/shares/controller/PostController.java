@@ -59,6 +59,8 @@ public class PostController {
     public PreferService preferService;
     @Autowired
     public StringRedisTemplate redisTemplate;
+    @Autowired
+    NoticeService noticeService;
 
 
     @GetMapping("get")
@@ -173,9 +175,11 @@ public class PostController {
                 files[i-1] = FileUtil.MultipartFileToFile(images[i]);
             }
             ossService.updateImages(files, post);
+
         }else{
             post.setCheckState(1);
             postService.updateById(post);
+            noticeService.sendCheck(post);
         }
         return new ResponseJson(ResultCode.SUCCESS);
     }

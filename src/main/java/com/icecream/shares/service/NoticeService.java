@@ -2,6 +2,7 @@ package com.icecream.shares.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.icecream.shares.pojo.Notice;
+import com.icecream.shares.pojo.Post;
 
 import java.util.List;
 
@@ -16,4 +17,8 @@ public interface NoticeService extends IService<Notice> {
      * @return
      */
     List<Notice> getNoticesById(Integer userId);
+
+    void sendRegister(Integer userId);
+
+    void sendCheck(Post post);
 }
