@@ -66,7 +66,7 @@ public class PostController {
 
 
     @GetMapping("get")
-    public ResponseJson<Post> getPost(Integer postId){
+    public ResponseJson<PostDetailVo> getPost(Integer postId){
         Post post = postService.findCheckedPostById(postId);
         if (post == null) {
             return new ResponseJson<>(ResultCode.UNVALIDPARAMS);
@@ -76,7 +76,7 @@ public class PostController {
         UserInfo userInfo = userInfoService.getById(post.getReleaseId());
         postDetailVo.setHeadLink(userInfo.getHeadLink());
         postDetailVo.setUsername(userInfo.getUsername());
-        return new ResponseJson<>(ResultCode.SUCCESS,post);
+        return new ResponseJson<>(ResultCode.SUCCESS,postDetailVo);
     }
 
     @GetMapping("search")
