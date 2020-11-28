@@ -61,6 +61,8 @@ public class PostController {
     public StringRedisTemplate redisTemplate;
     @Autowired
     NoticeService noticeService;
+    @Autowired
+    UserInfoService userInfoService;
 
 
     @GetMapping("get")
@@ -69,6 +71,11 @@ public class PostController {
         if (post == null) {
             return new ResponseJson<>(ResultCode.UNVALIDPARAMS);
         }
+        PostDetailVo postDetailVo = new PostDetailVo();
+        BeanUtils.copyProperties(post,postDetailVo);
+        UserInfo userInfo = userInfoService.getById(post.getReleaseId());
+        postDetailVo.setHeadLink(userInfo.getHeadLink());
+        postDetailVo.setUsername(userInfo.getUsername());
         return new ResponseJson<>(ResultCode.SUCCESS,post);
     }
 
