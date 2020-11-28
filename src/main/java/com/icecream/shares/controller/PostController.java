@@ -155,10 +155,13 @@ public class PostController {
 //        System.out.println(addPostVo);
         Integer userId = Integer.parseInt(LoginInterceptor.getUserId());//自己的id
         String suffixList = "jpg,jpeg,png,gif";
-        MultipartFile[] images = addPostVo.getImages();
-        if (ArrayUtils.isEmpty(images)) {
-            return new ResponseJson(ResultCode.WRONGFORMAT);
-        }
+//        MultipartFile[] images = addPostVo.getImages();
+        MultipartFile img = addPostVo.getImages();
+        MultipartFile[] images = new MultipartFile[1];
+        images[0] = img;
+//        if (ArrayUtils.isEmpty(images)) {
+//            return new ResponseJson(ResultCode.WRONGFORMAT);
+//        }
         for (MultipartFile image : images) {
             String uploadFileName = image.getOriginalFilename();
             String suffix = uploadFileName.substring(uploadFileName.lastIndexOf(".")

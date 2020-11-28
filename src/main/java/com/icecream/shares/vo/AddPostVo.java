@@ -23,7 +23,7 @@ public class AddPostVo {
     @NotBlank
     private String content;
     @NotNull
-    private MultipartFile[] images;
+    private MultipartFile images;
     @Min(value = 1)
     @Max(value = 10)
     private Integer beauty;
