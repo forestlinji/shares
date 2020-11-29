@@ -120,7 +120,6 @@ public class UserController {
 
     }
 
-    @Auth
     @GetMapping("/otherInfo")
     public ResponseJson<UserInfo> otherInfo(Integer userId){
 
