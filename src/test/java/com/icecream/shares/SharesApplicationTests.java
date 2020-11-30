@@ -10,10 +10,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @RunWith(SpringRunner.class)
-class SharesApplicationTests {
+public class SharesApplicationTests {
 
     @Test
-    void contextLoads() {
+    public void contextLoads() {
         System.out.println(MD5Utils.cptry("1" + "123456" + "1"));
     }
 
