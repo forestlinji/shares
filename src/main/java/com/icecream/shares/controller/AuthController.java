@@ -14,6 +14,7 @@ import com.icecream.shares.vo.*;
 import org.apache.commons.lang.math.RandomUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +39,10 @@ public class AuthController {
     public StringRedisTemplate redisTemplate;
     @Autowired
     public MessageService messageService;
-
+    @Value("${wechat.appid}")
+    private  String appid;
+    @Value("${wechat.secret}")
+    private  String secret;
 
 
     //单个参数post传参演示
@@ -88,7 +92,7 @@ public class AuthController {
         }
         String code = (String) uname;
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<WechatLogin> wechatResponse = restTemplate.getForEntity("https://api.weixin.qq.com/sns/jscode2session?appid=APPID&secret=SECRET&js_code=" + code + "&grant_type=authorization_code",
+        ResponseEntity<WechatLogin> wechatResponse = restTemplate.getForEntity("https://api.weixin.qq.com/sns/jscode2session?appid="+appid+"&secret="+secret+"&js_code=" + code + "&grant_type=authorization_code",
                 WechatLogin.class);
         WechatLogin wechatLogin = wechatResponse.getBody();
         if(!wechatLogin.getErrcode().equals(0)){
@@ -186,7 +190,7 @@ public class AuthController {
         int userId = Integer.parseInt(LoginInterceptor.getUserId());
         RestTemplate restTemplate = new RestTemplate();
 
-        ResponseEntity<WechatLogin> wechatResponse = restTemplate.getForEntity("https://api.weixin.qq.com/sns/jscode2session?appid=APPID&secret=SECRET&js_code=" + code + "&grant_type=authorization_code",
+        ResponseEntity<WechatLogin> wechatResponse = restTemplate.getForEntity("https://api.weixin.qq.com/sns/jscode2session?appid="+appid+"&secret="+secret+"&js_code=" + code + "&grant_type=authorization_code",
                 WechatLogin.class);
         WechatLogin wechatLogin = wechatResponse.getBody();
         if(!wechatLogin.getErrcode().equals(0)){
