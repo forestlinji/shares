@@ -4,7 +4,7 @@ import cn.hutool.core.lang.Assert;
 import com.icecream.shares.pojo.User;
 import com.icecream.shares.service.UserService;
 import com.icecream.shares.vo.LoginUsernameVo;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,7 +19,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.concurrent.TimeUnit;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @RunWith(SpringRunner.class)
 public class AuthControllerTest {
     @Autowired
