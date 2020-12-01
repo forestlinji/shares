@@ -5,6 +5,7 @@ import com.icecream.shares.vo.UserInfoVo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -20,6 +21,7 @@ public class UserInfo {
     private Integer userId;
     private String username;
     private Integer sex;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birth;
     private String userSign;
     private String headLink;
