@@ -1,9 +1,9 @@
 server:
   port: 11451
 spring:
-  jackson:
-    serialization:
-      write-dates-as-timestamps: true
+#  jackson:
+#    serialization:
+#      write-dates-as-timestamps: true
   http:
     encoding:
       force: true
