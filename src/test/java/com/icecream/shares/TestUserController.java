@@ -1,8 +1,16 @@
 package com.icecream.shares;
 
 import cn.hutool.core.lang.Assert;
+import com.icecream.shares.pojo.ResponseJson;
+import com.icecream.shares.pojo.ResultCode;
+import com.icecream.shares.pojo.UserInfo;
+import com.icecream.shares.service.ConcernService;
+import com.icecream.shares.service.UserInfoService;
+import com.icecream.shares.service.UserService;
+import com.icecream.shares.service.impl.UserServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -17,7 +25,10 @@ import org.springframework.web.client.RestTemplate;
 public class TestUserController {
     public final String baseUrl = "http://localhost:11451";
     public String token = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJST0xFIjoidXNlciIsImlzcyI6IkZvcmVzdGpDbGltYiIsImlhdCI6MTYwNjExODQyOSwic3ViIjoiMyIsImV4cCI6MTYwODcxMDQyOX0.-dadapsfD1hWZ8EtjxKtA0p3yEx90vf7cXC_aL2RlW4";
-
+    @Autowired
+    UserInfoService userInfoServiceImpl;
+    @Autowired
+    ConcernService concernServiceImpl;
     @Test
     public void testgetHeadLink(){
         RestTemplate restTemplate = new RestTemplate();
@@ -30,4 +41,44 @@ public class TestUserController {
         ResponseEntity<Object> response = restTemplate.exchange(baseUrl + "/user/getHeadLink?userId=1", HttpMethod.GET, httpEntity, Object.class);
         Assert.isTrue(response.getStatusCodeValue() == 200);
     }
+    @Test
+    public void testgetUserInfo(){
+        Integer userId=1;
+        UserInfo userInfo = userInfoServiceImpl.getById(userId);
+        if (userInfo == null){
+            System.out.println("false");
+        }else {
+            System.out.println(userInfo);
+        }
+    }
+    @Test
+    public void testcheckUsername(){
+        UserInfo userInfo = userInfoServiceImpl.getUserInfoByUsername("username");
+        if (userInfo == null){
+            System.out.println("false");
+        }else {
+            System.out.println(userInfo);
+        }
+    }
+    @Test
+    public void testgetConcern(){
+        System.out.println(concernServiceImpl.getConcern(1));
+    }
+
+    @Test
+    public  void testgetConcerned(){
+        System.out.println(concernServiceImpl.getConcerned(1));
+    }
+    @Test
+    public  void getotherInfo(){
+        Integer userId=2;
+        UserInfo userInfo = userInfoServiceImpl.getById(userId);
+        if (userInfo == null){
+            System.out.println("false");
+        }else {
+            System.out.println(userInfo);
+        }
+
+    }
+
 }
