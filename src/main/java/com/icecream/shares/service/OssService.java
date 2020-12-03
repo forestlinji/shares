@@ -14,7 +14,7 @@ public interface OssService {
     /**
      * 上传封面图
      */
-    void updateCover(MultipartFile image, Post post) throws Exception;
+    void updateCover(File image, Post post) throws Exception;
 
     /**
      * 上传其他图片

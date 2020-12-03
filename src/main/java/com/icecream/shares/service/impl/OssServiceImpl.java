@@ -34,9 +34,9 @@ public class OssServiceImpl implements OssService {
     NoticeService noticeService;
 
     @Override
-    public void updateCover(MultipartFile image, Post post) throws Exception {
-        String link = "shares/post/" + System.currentTimeMillis() + image.getOriginalFilename();
-        File cover = FileUtil.MultipartFileToFile(image);
+    public void updateCover(File image, Post post) throws Exception {
+        String link = "shares/post/" + System.currentTimeMillis() + image.getName();
+        File cover = image;
         ossClient.putObject("forestj", link, cover);
         cover.delete();
         post.setCoverLink(link);

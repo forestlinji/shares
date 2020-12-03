@@ -170,6 +170,7 @@ public class PostController {
                 return new ResponseJson(ResultCode.WRONGFORMAT);
             }
         }
+        File file = FileUtil.MultipartFileToFile(images[0]);
         Post post = new Post();
         BeanUtils.copyProperties(addPostVo, post);
         post.setReleaseTime(new Timestamp(System.currentTimeMillis()));
@@ -178,7 +179,7 @@ public class PostController {
         post.setReleaseId(userId);
         postService.save(post);
         Integer postId = post.getPostId();
-        ossService.updateCover(images[0], post);
+        ossService.updateCover(file, post);
         if(images.length > 1){
             File[] files = new File[images.length - 1];
             for (int i = 1; i < images.length; i++) {
