@@ -252,7 +252,7 @@ public class PostController {
         return new ResponseJson(ResultCode.SUCCESS);
     }
 
-    @DeleteMapping("deop")
+    @GetMapping("deop")
     @Auth
     public ResponseJson deop(Integer postId,Integer operationType){
         if(operationType<=0||operationType>=4){
