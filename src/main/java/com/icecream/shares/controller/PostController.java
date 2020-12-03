@@ -213,6 +213,17 @@ public class PostController {
         if(postOperation!=null){
             return new ResponseJson(ResultCode.UNVALIDPARAMS);
         }
+        switch (operationType){
+            case 1:
+                post.setCollectNum(post.getCollectNum() + 1);
+                break;
+            case 2:
+                post.setBadNum(post.getBadNum() + 1);
+                break;
+            case 3:
+                post.setGoodNum(post.getGoodNum() + 1);
+        }
+        postService.updateById(post);
         postOperation = new PostOperation();
         postOperation.setOperatorId(userId);
         postOperation.setOperationType(operationType);
@@ -260,6 +271,17 @@ public class PostController {
         if(postOperation==null){
             return new ResponseJson(ResultCode.UNVALIDPARAMS);
         }
+        switch (operationType){
+            case 1:
+                post.setCollectNum(post.getCollectNum() - 1);
+                break;
+            case 2:
+                post.setBadNum(post.getBadNum() - 1);
+                break;
+            case 3:
+                post.setGoodNum(post.getGoodNum() - 1);
+        }
+        postService.updateById(post);
         postOperationService.removeById(postOperation.getOperationId());
         UpdateWrapper<Prefer> wrapper = new UpdateWrapper<Prefer>().eq("user_id", userId);
         switch (post.getType()){
