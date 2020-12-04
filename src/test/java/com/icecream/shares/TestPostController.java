@@ -2,11 +2,14 @@ package com.icecream.shares;
 
 import cn.hutool.core.lang.Assert;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.icecream.shares.interceptor.LoginInterceptor;
 import com.icecream.shares.pojo.*;
+import com.icecream.shares.service.CommentService;
 import com.icecream.shares.service.PostOperationService;
 import com.icecream.shares.service.PostService;
 import com.icecream.shares.service.UserInfoService;
+import com.icecream.shares.vo.CommentVo;
 import com.icecream.shares.vo.PostDetailVo;
 import com.icecream.shares.vo.PostStatusVo;
 import org.junit.Test;
@@ -23,7 +26,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest()
 @RunWith(SpringRunner.class)
 public class TestPostController {
     public final String baseUrl = "http://localhost:11451";
@@ -34,17 +37,19 @@ public class TestPostController {
     UserInfoService userInfoService;
     @Autowired
     PostOperationService postOperationService;
-    @Test
-    public void testPostSearch(){
-        RestTemplate restTemplate = new RestTemplate();
-        //需要登录，在header中携带token
-        HttpHeaders requestHeaders = new HttpHeaders();
-        requestHeaders.add("Authorization", token);
-        //post请求参数放在body里面，get请求参数直接拼接url
-        HttpEntity httpEntity = new HttpEntity<Object>(null,requestHeaders);
-        ResponseEntity<Object> response = restTemplate.exchange(baseUrl + "/post/search", HttpMethod.GET, httpEntity, Object.class);
-        Assert.isTrue(response.getStatusCodeValue() == 200);
-    }
+    @Autowired
+    CommentService commentService;
+//    @Test
+//    public void testPostSearch(){
+//        RestTemplate restTemplate = new RestTemplate();
+//        //需要登录，在header中携带token
+//        HttpHeaders requestHeaders = new HttpHeaders();
+//        requestHeaders.add("Authorization", token);
+//        //post请求参数放在body里面，get请求参数直接拼接url
+//        HttpEntity httpEntity = new HttpEntity<Object>(null,requestHeaders);
+//        ResponseEntity<Object> response = restTemplate.exchange(baseUrl + "/post/search", HttpMethod.GET, httpEntity, Object.class);
+//        Assert.isTrue(response.getStatusCodeValue() == 200);
+//    }
     @Test
     public  void testgetPost() {
         Post post = postService.findCheckedPostById(1);
@@ -73,7 +78,7 @@ public class TestPostController {
     @Test
     public  void testgetStatus(){
         Post post = postService.findCheckedPostById(1);
-        Integer userId = Integer.parseInt(LoginInterceptor.getUserId());
+        Integer userId = 1;
         if (post == null) {
             System.out.println("false");
         }
@@ -114,4 +119,9 @@ public class TestPostController {
         System.out.println(postService.getHistory(1, 1, 4));
     }
 
+    @Test
+    public void testGetCommentsPage(){
+        IPage<CommentVo> commentsPage = commentService.getCommentsPage(1, 1, 10);
+        Assert.notNull(commentsPage);
+    }
 }

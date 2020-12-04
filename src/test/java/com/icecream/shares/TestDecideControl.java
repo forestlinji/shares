@@ -14,18 +14,22 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest()
 @RunWith(SpringRunner.class)
 public class TestDecideControl {
     @Autowired
     PostService postService;
     @Test
     public void testgetDecision(){
-        DecideVo decideVo= new DecideVo();
+        ArrayList<Integer> postIds = new ArrayList<>();
+        postIds.add(11);
+        postIds.add(12);
+        DecideVo decideVo= new DecideVo(postIds,3,3,3);
         List<Post> posts = postService.listByIds(decideVo.getPostIds());
         List<Double> vector = DecideUtil.decide(posts, decideVo);
         int index = 0;
