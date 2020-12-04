@@ -2,7 +2,9 @@ package com.icecream.shares.controller;
 
 import cn.hutool.core.util.PhoneUtil;
 import cn.hutool.core.util.RandomUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.aliyun.oss.ClientException;
+import com.google.gson.JsonObject;
 import com.icecream.shares.annotation.Auth;
 import com.icecream.shares.interceptor.LoginInterceptor;
 import com.icecream.shares.pojo.*;
@@ -92,13 +94,18 @@ public class AuthController {
         }
         String code = (String) uname;
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<WechatLogin> wechatResponse = restTemplate.getForEntity("https://api.weixin.qq.com/sns/jscode2session?appid="+appid+"&secret="+secret+"&js_code=" + code + "&grant_type=authorization_code",
-                WechatLogin.class);
-        WechatLogin wechatLogin = wechatResponse.getBody();
-        if(!wechatLogin.getErrcode().equals(0)){
+        ResponseEntity<String> wechatResponse = restTemplate.getForEntity("https://api.weixin.qq.com/sns/jscode2session?appid="+appid+"&secret="+secret+"&js_code=" + code + "&grant_type=authorization_code",String.class);
+        JSONObject wechatObj = JSONObject.parseObject(wechatResponse.getBody());
+//        WechatLogin wechatLogin = wechatResponse.getBody();
+
+        String openid = wechatObj.getString("openid");
+//        if(!wechatLogin.getErrcode().equals(0)){
+//            return new ResponseJson(ResultCode.UNVALIDPARAMS);
+//        }
+//        String openid = wechatLogin.getOpenid();
+        if (openid == null) {
             return new ResponseJson(ResultCode.UNVALIDPARAMS);
         }
-        String openid = wechatLogin.getOpenid();
         boolean hasRegister = true;
         User user = userService.findUserByOpenId(openid);
         if(user == null){
