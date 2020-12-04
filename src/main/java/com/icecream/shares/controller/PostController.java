@@ -170,6 +170,7 @@ public class PostController {
                 return new ResponseJson(ResultCode.WRONGFORMAT);
             }
         }
+        File file = FileUtil.MultipartFileToFile(images[0]);
         Post post = new Post();
         BeanUtils.copyProperties(addPostVo, post);
         post.setReleaseTime(new Timestamp(System.currentTimeMillis()));
@@ -178,7 +179,7 @@ public class PostController {
         post.setReleaseId(userId);
         postService.save(post);
         Integer postId = post.getPostId();
-        ossService.updateCover(images[0], post);
+        ossService.updateCover(file, post);
         if(images.length > 1){
             File[] files = new File[images.length - 1];
             for (int i = 1; i < images.length; i++) {
@@ -213,6 +214,17 @@ public class PostController {
         if(postOperation!=null){
             return new ResponseJson(ResultCode.UNVALIDPARAMS);
         }
+        switch (operationType){
+            case 1:
+                post.setCollectNum(post.getCollectNum() + 1);
+                break;
+            case 2:
+                post.setBadNum(post.getBadNum() + 1);
+                break;
+            case 3:
+                post.setGoodNum(post.getGoodNum() + 1);
+        }
+        postService.updateById(post);
         postOperation = new PostOperation();
         postOperation.setOperatorId(userId);
         postOperation.setOperationType(operationType);
@@ -241,7 +253,7 @@ public class PostController {
         return new ResponseJson(ResultCode.SUCCESS);
     }
 
-    @DeleteMapping("deop")
+    @GetMapping("deop")
     @Auth
     public ResponseJson deop(Integer postId,Integer operationType){
         if(operationType<=0||operationType>=4){
@@ -260,6 +272,17 @@ public class PostController {
         if(postOperation==null){
             return new ResponseJson(ResultCode.UNVALIDPARAMS);
         }
+        switch (operationType){
+            case 1:
+                post.setCollectNum(post.getCollectNum() - 1);
+                break;
+            case 2:
+                post.setBadNum(post.getBadNum() - 1);
+                break;
+            case 3:
+                post.setGoodNum(post.getGoodNum() - 1);
+        }
+        postService.updateById(post);
         postOperationService.removeById(postOperation.getOperationId());
         UpdateWrapper<Prefer> wrapper = new UpdateWrapper<Prefer>().eq("user_id", userId);
         switch (post.getType()){
