@@ -105,6 +105,7 @@ public class PostController {
             return new ResponseJson<>(ResultCode.UNVALIDPARAMS);
         }
     }
+
     @Auth
     @PostMapping("/comment")
     public ResponseJson<Object> comment(@RequestBody Map<String, String> map){
@@ -150,7 +151,7 @@ public class PostController {
 
 
     @PostMapping("add")
-    @Auth
+    @Auth("admin")
     public ResponseJson addPost(@Valid AddPostVo addPostVo) throws Exception {
 //        System.out.println(addPostVo);
         Integer userId = Integer.parseInt(LoginInterceptor.getUserId());//自己的id
